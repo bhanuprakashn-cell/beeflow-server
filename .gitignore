@@ -1,0 +1,7 @@
+.env
+secrets/
+data/*.db
+data/*.db-shm
+data/*.db-wal
+logs/
+node_modules/

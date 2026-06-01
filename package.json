@@ -1,0 +1,30 @@
+{
+    "name": "beeprodexa-poc",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+        "dev": "nodemon src/index.js",
+        "start": "node src/index.js",
+        "start:mac": "bash ./scripts/start-mac.sh",
+        "start:win": "powershell -ExecutionPolicy Bypass -File .\\scripts\\start-windows.ps1",
+        "start:win:full": "powershell -ExecutionPolicy Bypass -File .\\scripts\\start-windows-full.ps1",
+        "ngrok": "ngrok http 8080",
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "type": "module",
+    "dependencies": {
+        "better-sqlite3": "^12.10.0",
+        "cors": "^2.8.6",
+        "dotenv": "^17.4.2",
+        "express": "^5.2.1",
+        "firebase-admin": "^13.10.0",
+        "uuid": "^14.0.0"
+    },
+    "devDependencies": {
+        "nodemon": "^3.1.14"
+    }
+}
