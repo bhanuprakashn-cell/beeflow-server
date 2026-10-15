@@ -51,7 +51,7 @@
       <div class="stats">
         <div class="stat"><div class="stat-top">Registered demo assets <span class="stat-icon">▧</span></div><div class="stat-value" id="statAssets">—</div><div class="stat-note">Seeded for this development demo</div></div>
         <div class="stat"><div class="stat-top">Requiring Final QC <span class="stat-icon">⌕</span></div><div class="stat-value" id="statRequired">—</div><div class="stat-note">Based on saved parameter settings</div></div>
-        <div class="stat"><div class="stat-top">Demo runs recorded <span class="stat-icon">▤</span></div><div class="stat-value" id="statRuns">—</div><div class="stat-note">Stored in local POC database</div></div>
+        <div class="stat"><div class="stat-top">Boards with saved results <span class="stat-icon">▤</span></div><div class="stat-value" id="statRuns">—</div><div class="stat-note">Stored in local POC database</div></div>
         <div class="stat"><div class="stat-top">Latest board result <span class="stat-icon">◎</span></div><div class="stat-value" id="statLatest" style="font-size:19px">NOT TESTED</div><div class="stat-note" id="statLatestNote">No run recorded for selected board</div></div>
       </div>
 
@@ -195,6 +195,11 @@
         api('/api/audit/' + encodeURIComponent(asset.assetId))
       ]);
       state.history = runs.data || [];
+      if (!state.currentRun && state.history.length) {
+        const latestRun = await api('/api/runs/' + encodeURIComponent(state.history[0].runId));
+        state.currentRun = latestRun.data;
+        state.selectedChannel = state.currentRun.channels.find((c) => c.status === 'FAIL')?.channelNo || 1;
+      }
       renderHistory();
       renderAudit(audit.data || []);
     } catch (error) { toast(error.message, true); }
@@ -204,7 +209,7 @@
     const asset = currentAsset();
     $('statAssets').textContent = assets.length;
     $('statRequired').textContent = assets.filter((a) => a.requiresFinalQC).length;
-    $('statRuns').textContent = assets.reduce((sum, a) => sum + (a.latestRunId ? 1 : 0), 0) + state.history.length;
+    $('statRuns').textContent = assets.filter((a) => a.latestRunId).length;
     $('statLatest').textContent = asset ? statusLabel(asset.latestStatus) : '—';
     $('statLatest').style.color = asset && ['FAILED','FAIL'].includes(asset.latestStatus) ? 'var(--red)' : asset && ['PASSED','PASS'].includes(asset.latestStatus) ? 'var(--green)' : 'var(--ink)';
     $('statLatestNote').textContent = asset ? (asset.latestRunId ? asset.latestRunId : 'No run recorded for selected board') : 'No asset selected';
