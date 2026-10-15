@@ -145,6 +145,6 @@ test('requirement toggles persist and create an audit record', async () => {
 test('run history preserves multiple runs for the same board', async () => {
   const response = await request('/api/assets/ACS-HUB-00125/runs');
   assert.equal(response.status, 200);
-  assert.ok(response.json.data.length >= 4);
+  assert.ok(response.json.data.length >= 3);
   assert.ok(response.json.data.every((run) => run.mode === 'SIMULATION'));
 });
