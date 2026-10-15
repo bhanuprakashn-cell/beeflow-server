@@ -16,6 +16,7 @@ This is a **development-only proof of concept** for BeeFlow's proposed QR-based 
 3. Configure the server using its **development-only** environment setup. The existing server requires `FIREBASE_PROJECT_ID` and `FIREBASE_COLLECTION_PREFIX`; the prefix must start with `poc_`. Use the project's existing non-production Firebase credentials and make sure the production project ID is included in `PRODUCTION_FIREBASE_PROJECT_IDS`.
 4. Start using the repository's normal development command: `npm run dev`.
 5. Open `http://localhost:8080/admin/final-qc-poc` (or use the configured local port).
+6. Run the simulation endpoint checks with `npm test`.
 
 The server entry point validates Firebase isolation before listening, so do not use production Firebase credentials or project IDs for this POC.
 
@@ -39,6 +40,10 @@ The server entry point validates Firebase isolation before listening, so do not 
 - Three deterministic scenarios: mixed results with illustrative failures, all channels passing in simulation, and an interrupted/incomplete run.
 - A 120-channel illustrative map, channel-level failure detail, run history and JSON/CSV downloads.
 - Local SQLite persistence so refreshing the page does not erase the demo's run history.
+
+## Automated tests
+
+The Node.js built-in test runner covers seeded requirement defaults, the three-failure scenario, all-pass simulation, an interrupted run that stays incomplete, requirement gating, audit history, persistence, and multiple runs. Execute with `npm test` in an environment with the repository dependencies installed. These are backend simulation tests; they do not validate physical hardware.
 
 ## Demo scenarios
 
