@@ -8,14 +8,17 @@ import path from 'node:path';
 let server;
 let baseUrl;
 let tempDir;
+let dbInstance;
 
 before(async () => {
   process.env.NODE_ENV = 'test';
   tempDir = mkdtempSync(path.join(tmpdir(), 'beeflow-final-qc-poc-'));
   process.env.DB_PATH = path.join(tempDir, 'poc.db');
 
-  // Dynamic import is intentional: the test DB and non-production mode must
-  // be set before the route imports the configured SQLite connection.
+  // Dynamic imports ensure the isolated test DB is configured before SQLite
+  // and the route initialize. Keep the connection for deterministic cleanup.
+  const { db } = await import('../src/db/sqlite.js');
+  dbInstance = db;
   const { default: finalQcPocRoutes } = await import('../src/api/final-qc-poc.routes.js');
   const app = express();
   app.use(express.json());
@@ -31,6 +34,7 @@ before(async () => {
 
 after(async () => {
   if (server) await new Promise((resolve) => server.close(resolve));
+  if (dbInstance && dbInstance.open) dbInstance.close();
   if (tempDir) rmSync(tempDir, { recursive: true, force: true });
 });
 
